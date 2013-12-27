@@ -1,6 +1,6 @@
 #!/bin/bash
 # @author 	AtomskJD aka mintru9
-# version	0.12
+# @version	0.15
 
 settingsDir=sites/default/settings.php
 spaceUsed=$(du -sh | cut -f 1)
@@ -14,35 +14,40 @@ if (( $( ls -l | grep 'bz2$\|sql$' | wc -l) )) ; then
 		echo -e "CLEARING old dumps\c"
 		rm -f *.bz2 *.sql
 		echo -e "\t[DONE]"
-	else
-		echo "[EXIT]"
-		exit
+	#else
+		#echo "[EXIT]"
+		#exit
 	fi
 else
 	printf "no old backup detected\n"
 fi
 printf "\n"
 echo "----------------------------------------------------------------------"
-printf "Choose backup type:\n[ F ] Full backup with DB & FileS\n[ DB ] for db backup\n[ FS ] for files backup\n Type : "
+printf "Choose backup type:\n[ F ] Full backup with DB & FileS\n[ DB ] for db backup\n[ FS ] for files backup\n[] Default Full backup\nType : "
 read backupType
 	printf "\n"
 	echo "----------------------------------------------------------------------"
-if [[ $backupType = @(DB|F) ]] ; then
+if [[ $backupType = @(DB|F|"") ]] ; then
 
 USER=$(grep "^ *'username' => .*',$" $settingsDir | cut -d "'" -f 4)
 PASS=$(grep "^ *'password' => .*',$" $settingsDir | cut -d "'" -f 4)
 DB=$(grep "^ *'database' => .*',$" $settingsDir | cut -d "'" -f 4)
 	echo -e "PACKING DB\c"
 
-	if mysqldump -u$USER -p$PASS $DB > dump.sql ; then
+	if mysqldump -u"$USER" -p"$PASS" "$DB" > dump.sql ; then
 		echo -e "  \t\t[COMPLETE]"
 	else
-		echo "\n\t\tMYSQLDUMP [FAIL]"
-		exit
+		echo "something goes WRONG maybe [PASSWORD]"
+		if mysqldump -u"$USER" -p "$DB" > dump.sql ; then
+			echo -e "MYSQLDUMP\t\t[COMPLETE]"
+		else
+			echo -e "\nMYSQLDUMP\t\t[FAIL]"
+			exit
+		fi
 	fi
 fi
 
-if [[ $backupType = @(FS|F) ]] ; then
+if [[ $backupType = @(FS|F|"") ]] ; then
 	printf "\n"
 	echo -e "PACKING FILES\c"
 	if tar -cjf dump.tar.bz2 * .htaccess ; then
@@ -54,4 +59,5 @@ if [[ $backupType = @(FS|F) ]] ; then
 fi
 printf "\n"
 echo "----------------------------------------------------------------------"
-echo -e "go WGET it \t\t[ALL DONE]"
+newSize=$(du -csh *bz2 | tail -1 | cut -f 1)
+echo -e "go WGET it $newSize\t\t[ALL DONE]"
