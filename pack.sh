@@ -1,6 +1,6 @@
 #!/bin/bash
 # @author 	AtomskJD aka mintru9
-# @version	0.15
+# @version	0.16
 
 settingsDir=sites/default/settings.php
 spaceUsed=$(du -sh | cut -f 1)
@@ -29,9 +29,18 @@ read backupType
 	echo "----------------------------------------------------------------------"
 if [[ $backupType = @(DB|F|"") ]] ; then
 
-USER=$(grep "^ *'username' => .*',$" $settingsDir | cut -d "'" -f 4)
-PASS=$(grep "^ *'password' => .*',$" $settingsDir | cut -d "'" -f 4)
-DB=$(grep "^ *'database' => .*',$" $settingsDir | cut -d "'" -f 4)
+if (( $(sed -n "/^ *'database' => '.*'/p" sites/default/settings.php | wc -c) )) ; then
+	echo "is drupal 7"
+	USER=$(grep "^ *'username' => .*',$" $settingsDir | cut -d "'" -f 4)
+	PASS=$(grep "^ *'password' => .*',$" $settingsDir | cut -d "'" -f 4)
+	DB=$(grep "^ *'database' => .*',$" $settingsDir | cut -d "'" -f 4)
+fi
+if (( $(sed -n "/^\$db_url = 'mysqli:.*';/p" sites/default/settings.php | wc -c) )) ; then
+	echo "is drupal 7"
+	USER=$(grep "^\$db_url = 'mysqli:.*';" sites/default/settings.php | cut -c 21- | sed -e "s/@localhost\//:/" -e "s/';//" | cut -d ":" -f 1)
+	PASS=$(grep "^\$db_url = 'mysqli:.*';" sites/default/settings.php | cut -c 21- | sed -e "s/@localhost\//:/" -e "s/';//" | cut -d ":" -f 2)
+	DB=$(grep "^\$db_url = 'mysqli:.*';" sites/default/settings.php | cut -c 21- | sed -e "s/@localhost\//:/" -e "s/';//" | cut -d ":" -f 3)
+fi
 	echo -e "PACKING DB\c"
 
 	if mysqldump -u"$USER" -p"$PASS" "$DB" > dump.sql ; then

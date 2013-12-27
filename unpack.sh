@@ -4,10 +4,10 @@
 
 echo -e "CLEAR SETUP ?[Y/n]: \c"
 read SETUP
-if [[ $SETUP == "Y" ]] ; then
+if [[ $SETUP == @("Y"|"") ]] ; then
 	chmod 777 -Rf *
 	rm -rf *
-	echo "PARKING CLEAR"
+	echo "PARKING CLEAN"
 else
 	if (( $(ls -1 | wc -l) )) ; then
 		WRN=$(ls -1 | wc -l)
@@ -50,20 +50,20 @@ else rm -fv dump.sql htaccess.tar.bz2 .htaccess
 fi
 printf "\n"
 echo "----------------------------------------------------------------------"
-printf "downloading components\n"
+printf "DOWNLOAD COMPONENTS\n"
 #echo "WGET .haccess"
 if wget -q http://surweb-dev.ru/htaccess.tar.bz2 ; then
-	echo -e "DOWNLOAD htaccess\t\t[SUCCESS]"
-else echo -e "DOWNLOAD htaccess\t\t[FAIL]"
+	echo -e "download htaccess\t\t[SUCCESS]"
+else echo -e "download htaccess\t\t[FAIL]"
 	exit
 fi
 
 if [ $SITE ] ; then 
 	echo -e "WGET dump from\t$SITE\n"
 	if wget http://$SITE/dump.tar.bz2 ; then
-		echo -e "DOWNLOAD dumo.tar.bz2\t\t[SUCCESS]"
+		echo -e "download dumo.tar.bz2\t\t[SUCCESS]"
 	else 
-		echo -e "DOWNLOAD dumo.tar.bz2\t\t[FAIL]"
+		echo -e "download dumo.tar.bz2\t\t[FAIL]"
 		exit
 	fi
 else
@@ -72,10 +72,10 @@ fi
 
 printf "\n"
 echo "----------------------------------------------------------------------"
-echo -e "UNPACKING files : "
+echo -e "UNPACKING FILES : "
 if tar -xjf htaccess.tar.bz2 ; then
-	echo -e "\t\t\t htaccess.tar.bz2 \t[SUCCESS]"
-else echo -e "\t\t\t htaccess.tar.bz2 \t[FAIL]"
+	echo -e "extract htaccess.tar.bz2\t[SUCCESS]"
+else echo -e "extract htaccess.tar.bz2\t[FAIL]"
 	exit
 fi
 if tar -xjf dump.tar.bz2 ; then
@@ -86,30 +86,30 @@ fi
 
 printf "\n"
 echo "----------------------------------------------------------------------"
-echo -e "IMPORT data to database : "
+echo -e "IMPORT DATABASE : "
 if mysql -u$USER -p$PASS $DB < dump.sql ; then
-	echo -e "database import\t\t[SUCCESS]"
-else echo -e "database import\t\t[FAIL]"
+	echo -e "database import\t\t\t[SUCCESS]"
+else echo -e "database import\t\t\t[FAIL]"
 	exit
 fi
 
 printf "\n"
 echo "----------------------------------------------------------------------"
-echo -e "prepare CONFIG file \c"
+echo -e "PREPARE CONFIG\c"
 chmod 777 sites/default
 chmod 777 sites/default/settings.php
 
 
 if (( $(sed -n "/^ *'database' => '.*'/p" sites/default/settings.php | wc -c) )) ; then
 sed -e "s/^ *'database' => '.*'/		'database' => '$DB'/" -e "s/^ *'username' => '.*'/		'username' => '$USER'/" -e "s/^ *'password' => '.*'/		'password' => '$PASS'/" sites/default/settings.php > sites/default/settings.new
-echo -e "\t for DRUPAL 7"
+echo -e "\t\t\tfor DRUPAL 7"
 fi
 
 #  $db_url = 'mysqli://username:password@localhost/databasename';
 
 if (( $(sed -n "/^\$db_url = 'mysqli:.*';/p" sites/default/settings.php | wc -c) )) ; then
 sed -e "s/^\$db_url = 'mysqli:.*';/\$db_url = 'mysqli:\/\/$USER:$PASS@localhost\/$DB';/" sites/default/settings.php > sites/default/settings.new
-echo -e "\t for DRUPAL 6"
+echo -e "\t\t\tfor DRUPAL 6"
 fi
 
 
@@ -122,8 +122,8 @@ chmod 555 sites/default
 echo -e "CLEARING SETUP\c"
 	rm -f dump.*
 	rm -f htaccess.tar.bz2
-echo -e "\t\t[SUCCESS]"
+echo -e "\t\t\t[SUCCESS]"
 
 printf "\n"
 echo "----------------------------------------------------------------------"
-echo -e "ALL DONE \t\t $SITE \t\t STAY AWESOME GOTHAM!"
+echo -e "$SITE\t\t\t[ALL DONE]"
