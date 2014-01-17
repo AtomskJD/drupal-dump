@@ -1,11 +1,11 @@
 #!/bin/bash
 # @author 	AtomskJD aka mintru9
-# @version	0.25
+# @version	0.26
 
 echo -e "CLEAR SETUP ?[Y/n]: \c"
 read SETUP
 if [[ $SETUP == @("Y"|"") ]] ; then
-	chmod 777 -Rf *
+	chmod -Rf 777 *
 	rm -rf *
 	echo "PARKING CLEAN"
 else
@@ -97,7 +97,7 @@ printf "\n"
 echo "----------------------------------------------------------------------"
 echo -e "PREPARE CONFIG\c"
 chmod 777 sites/default
-chmod 777 sites/default/settings.php
+chmod 777 sites/default/settings.*
 
 
 if (( $(sed -n "/^ *'database' => '.*'/p" sites/default/settings.php | wc -c) )) ; then
