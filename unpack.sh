@@ -1,6 +1,6 @@
 #!/bin/bash
 # @author 	AtomskJD aka mintru9
-# @version	0.26
+# @version	0.28
 
 echo -e "CLEAR SETUP ?[Y/n]: \c"
 read SETUP
@@ -61,9 +61,9 @@ fi
 if [ $SITE ] ; then 
 	echo -e "WGET dump from\t$SITE\n"
 	if wget http://$SITE/dump.tar.bz2 ; then
-		echo -e "download dumo.tar.bz2\t\t[SUCCESS]"
+		echo -e "download dump.tar.bz2\t\t[SUCCESS]"
 	else 
-		echo -e "download dumo.tar.bz2\t\t[FAIL]"
+		echo -e "download dump.tar.bz2\t\t[FAIL]"
 		exit
 	fi
 else
@@ -100,8 +100,8 @@ chmod 777 sites/default
 chmod 777 sites/default/settings.*
 
 
-if (( $(sed -n "/^ *'database' => '.*'/p" sites/default/settings.php | wc -c) )) ; then
-sed -e "s/^ *'database' => '.*'/		'database' => '$DB'/" -e "s/^ *'username' => '.*'/		'username' => '$USER'/" -e "s/^ *'password' => '.*'/		'password' => '$PASS'/" sites/default/settings.php > sites/default/settings.new
+if (( $(sed -n "/^\s*'database' => '.*'/p" sites/default/settings.php | wc -c) )) ; then
+sed -e "s/^\s*'database' => '.*'/		'database' => '$DB'/" -e "s/^\s*'username' => '.*'/		'username' => '$USER'/" -e "s/^\s*'password' => '.*'/		'password' => '$PASS'/" sites/default/settings.php > sites/default/settings.new
 echo -e "\t\t\tfor DRUPAL 7"
 fi
 
