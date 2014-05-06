@@ -1,6 +1,6 @@
 #!/bin/bash
 # @author 	AtomskJD aka mintru9
-# @version	0.18
+# @version	0.19
 
 if [ $1 ] ; then
 	settingsDir=sites/$1/settings.php
@@ -37,9 +37,9 @@ if [[ $backupType = @(DB|F|"") ]] ; then
 
 	if (( $(sed -n "/^\s*'database' => '.*'/p" $settingsDir | wc -c) )) ; then
 		echo "is drupal 7"
-		USER=$(grep "^\s*'username' => .*',$" $settingsDir | cut -d "'" -f 4)
-		PASS=$(grep "^\s*'password' => .*',$" $settingsDir | cut -d "'" -f 4)
-		DB=$(grep "^\s*'database' => .*',$" $settingsDir | cut -d "'" -f 4)
+		USER=$(grep "^\s*'username' => .*'," $settingsDir | cut -d "'" -f 4)
+		PASS=$(grep "^\s*'password' => .*'," $settingsDir | cut -d "'" -f 4)
+		DB=$(grep "^\s*'database' => .*'," $settingsDir | cut -d "'" -f 4)
 	fi
 	if (( $(sed -n "/^\$db_url = 'mysqli:.*';/p" $settingsDir | wc -c) )) ; then
 		echo "is drupal 6"
