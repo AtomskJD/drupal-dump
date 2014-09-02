@@ -8,13 +8,14 @@ mkdir -p bin install drush
 wget -O $HOME/drush/drush.zip https://github.com/drush-ops/drush/archive/6.x.zip
 unzip drush/drush.zip -d drush/
 rm $HOME/drush/drush.zip
-cp $HOME/drush/drush-6.x/* drush/
-cp $HOME/drush/drush-6.x/.* drush/
+mv $HOME/drush/drush-6.x/* drush/
+mv $HOME/drush/drush-6.x/.gitignore drush/
+mv $HOME/drush/drush-6.x/.travis.yml drush/
 rm -r $HOME/drush/drush-6.x/
 chmod u+x $HOME/drush/drush
 
 echo export PATH="/opt/php/5.4/bin:$HOME/bin:$HOME/drush:$PATH" >> .profile
-source .profile
+#source $HOME/.profile
 
 echo -e '\033[1;32mInstallation Successful\033[0m'
 
