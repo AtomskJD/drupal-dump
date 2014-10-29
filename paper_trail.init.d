@@ -29,7 +29,7 @@ EXTRAOPTIONS=""
 RETVAL=0
 
 start(){
-    echo "$dates : paper trail daemon starting" >> $HOME/logs/self.log
+    echo "$dates : paper_trail daemon starting" >> $HOME/logs/self.log
 
     $prog -c $config $EXTRAOPTIONS
 
@@ -52,8 +52,8 @@ stop(){
 
 status(){
     echo -n $"Checking for process "
-
-    if ($(ps -A | grep remote_syslog | awk '{print $1}')); then
+    tmp=$(ps -A | grep remote_syslog | wc -l)
+    if [[ $tmp > 0 ]]; then
       echo -e '\033[1;32m[ FOUND ]\033[0m'
     else
       echo "[ not found ]"

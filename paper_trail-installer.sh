@@ -18,14 +18,13 @@ echo "mail.add_x_header = On" >> $HOME/php-bin/php.ini
 echo "mail.log = $HOME/logs/mail.log" >> $HOME/php-bin/php.ini
 
 touch $HOME/logs/self.log
-touch $HOME/logs/mail.log
 
 #cp $HOME/bin/example_config.yml $HOME/bin/remote_syslog_conf.yml
 # set YOUR instance values
 
 
 
-sed -e "s/port:.*$/port: 28248/" -e "s/host:.*$/host: logs2.papertrailapp.com/" -e "s/^\s*- locallog.txt/  - logs\/*.error.log\n  - logs\/mail.log\n  - logs\/self.log/" $HOME/bin/example_config.yml > $HOME/bin/remote_syslog_conf.yml
+sed -e "s/port:.*$/port: 28248/" -e "s/host:.*$/host: logs2.papertrailapp.com/" -e "s/^\s*- locallog.txt/  - logs\/mail.log\n  - logs\/self.log/" $HOME/bin/example_config.yml > $HOME/bin/remote_syslog_conf.yml
 
 
 
