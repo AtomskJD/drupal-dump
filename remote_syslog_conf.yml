@@ -1,0 +1,9 @@
+hostname: "REG_9"
+files:
+  - logs/mail.log
+  - logs/self.log
+destination:
+  host: logs2.papertrailapp.com
+  port: 28248
+  protocol: tls
+
